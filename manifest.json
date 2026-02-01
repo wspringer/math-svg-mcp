@@ -8,6 +8,7 @@
     "name": "Wilfred Springer"
   },
   "repository": {
+    "type": "git",
     "url": "https://github.com/wspringer/math-svg-mcp"
   },
   "license": "MIT",
