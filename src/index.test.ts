@@ -77,8 +77,8 @@ describe('SVG output validation', () => {
   it('produces standalone SVG that can be embedded', () => {
     const result = latexToSvg('\\sqrt{2}');
 
-    // Should be a complete SVG that can stand alone
-    expect(result.svg).toMatch(/^<mjx-container[^>]*>/);
-    expect(result.svg).toContain('<svg');
+    // Should be a complete SVG that can stand alone (no mjx-container wrapper)
+    expect(result.svg).toMatch(/^<svg[^>]*>/);
+    expect(result.svg).not.toContain('mjx-container');
   });
 });

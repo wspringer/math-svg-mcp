@@ -18,13 +18,7 @@
     "check": "biome check --write .",
     "prepare": "husky"
   },
-  "keywords": [
-    "mcp",
-    "latex",
-    "mathjax",
-    "svg",
-    "math"
-  ],
+  "keywords": ["mcp", "latex", "mathjax", "svg", "math"],
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
@@ -41,9 +35,7 @@
     "vitest": "^3.0.0"
   },
   "lint-staged": {
-    "*.{js,ts,json}": [
-      "biome check --write"
-    ]
+    "*.{js,ts,json}": ["biome check --write"]
   },
   "engines": {
     "node": ">=18"

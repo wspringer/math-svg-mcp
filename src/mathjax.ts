@@ -55,7 +55,8 @@ export function latexToSvg(
     containerWidth,
   });
 
-  const svgString = adaptor.outerHTML(node);
+  // Use innerHTML to get just the SVG element, not the mjx-container wrapper
+  const svgString = adaptor.innerHTML(node);
 
   // Extract dimensions from the SVG
   const widthMatch = svgString.match(/width="([^"]+)"/);
