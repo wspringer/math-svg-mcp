@@ -1,3 +1,9 @@
+## 1.0.3 (2026-02-01)
+
+### Fixes
+
+- Fix mcpb manifest - add required repository type field
+
 ## 1.0.2 (2026-02-01)
 
 ### Fixes
