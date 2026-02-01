@@ -24,6 +24,8 @@ export interface ConversionResult {
   svg: string;
   width: string;
   height: string;
+  /** Distance below the text baseline (for vertical alignment) */
+  depth: string;
 }
 
 // Singleton for the MathJax document
@@ -108,10 +110,19 @@ export function latexToSvg(
   const widthMatch = svgString.match(/width="([^"]+)"/);
   const heightMatch = svgString.match(/height="([^"]+)"/);
 
+  // Extract depth (distance below baseline) from vertical-align style
+  // MathJax outputs: style="vertical-align: -2.159ex;" (negative = below baseline)
+  const verticalAlignMatch = svgString.match(/vertical-align:\s*(-?[0-9.]+)ex/);
+  const depthEx = verticalAlignMatch
+    ? Math.abs(Number.parseFloat(verticalAlignMatch[1]))
+    : 0;
+  const depth = convertExToUnit(depthEx, exSize, unit);
+
   return {
     svg: svgString,
     width: widthMatch?.[1] ?? 'unknown',
     height: heightMatch?.[1] ?? 'unknown',
+    depth,
   };
 }
 

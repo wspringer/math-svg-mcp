@@ -125,4 +125,24 @@ describe('latexToSvg', () => {
 
     expect(smallerWidth).toBeLessThan(defaultWidth);
   });
+
+  it('returns depth for baseline alignment', () => {
+    // Fractions extend below baseline, so depth should be non-zero
+    const result = latexToSvg('\\frac{1}{2}', { unit: 'pt' });
+
+    expect(result.depth).toBeDefined();
+    expect(result.depth).toMatch(/pt$/);
+
+    const depthValue = Number.parseFloat(result.depth);
+    expect(depthValue).toBeGreaterThan(0);
+  });
+
+  it('returns zero depth for expressions on baseline', () => {
+    // Simple 'x' sits on the baseline, depth should be 0 or very small
+    const result = latexToSvg('x', { unit: 'pt' });
+
+    expect(result.depth).toBeDefined();
+    const depthValue = Number.parseFloat(result.depth);
+    expect(depthValue).toBeLessThan(1); // Should be essentially 0
+  });
 });
