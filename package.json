@@ -1,0 +1,43 @@
+{
+  "name": "math-svg-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for converting LaTeX math expressions to SVG using MathJax",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "math-svg-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "check": "biome check --write .",
+    "prepare": "husky"
+  },
+  "keywords": ["mcp", "latex", "mathjax", "svg", "math"],
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "mathjax-full": "^3.2.2",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.0",
+    "@types/node": "^22.10.0",
+    "husky": "^9.1.0",
+    "lint-staged": "^15.3.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  },
+  "lint-staged": {
+    "*.{js,ts,json}": ["biome check --write"]
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
