@@ -1,3 +1,9 @@
+## 1.0.2 (2026-02-01)
+
+### Fixes
+
+- Fix mcpb manifest validation errors
+
 ## 1.0.1 (2026-02-01)
 
 ### Fixes
