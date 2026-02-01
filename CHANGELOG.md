@@ -1,3 +1,9 @@
+## 1.0.4 (2026-02-01)
+
+### Fixes
+
+- Remove mjx-container HTML wrapper from SVG output, producing valid standalone SVG files that work with applications like Adobe InDesign
+
 ## 1.0.3 (2026-02-01)
 
 ### Fixes
