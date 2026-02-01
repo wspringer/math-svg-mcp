@@ -1,0 +1,23 @@
+[packages.math-svg-mcp]
+versioned_files = ["package.json"]
+changelog = "CHANGELOG.md"
+
+[[workflows]]
+name = "prepare-release"
+
+[[workflows.steps]]
+type = "PrepareRelease"
+ignore_conventional_commits = true
+
+[[workflows]]
+name = "release"
+
+[[workflows.steps]]
+type = "Release"
+
+[bot.releases]
+enabled = true
+
+[github]
+owner = "wspringer"
+repo = "math-svg-mcp"
