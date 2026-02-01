@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "math-svg": {
+      "command": "node",
+      "args": ["dist/index.js"]
+    }
+  }
+}

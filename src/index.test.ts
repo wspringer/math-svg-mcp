@@ -21,7 +21,7 @@ describe('latex_to_svg_file integration', () => {
   });
 
   it('writes SVG to file correctly', async () => {
-    const result = latexToSvg('E = mc^2');
+    const result = latexToSvg('E = mc^2', { unit: 'pt' });
     const outputPath = join(testDir, 'equation.svg');
 
     await writeFile(outputPath, result.svg, 'utf-8');
@@ -32,7 +32,7 @@ describe('latex_to_svg_file integration', () => {
   });
 
   it('creates nested directories for output', async () => {
-    const result = latexToSvg('\\pi r^2');
+    const result = latexToSvg('\\pi r^2', { unit: 'pt' });
     const outputPath = join(testDir, 'nested', 'deep', 'equation.svg');
 
     await mkdir(join(testDir, 'nested', 'deep'), { recursive: true });
@@ -46,11 +46,11 @@ describe('latex_to_svg_file integration', () => {
     const outputPath = join(testDir, 'overwrite.svg');
 
     // Write first version
-    const result1 = latexToSvg('x');
+    const result1 = latexToSvg('x', { unit: 'pt' });
     await writeFile(outputPath, result1.svg, 'utf-8');
 
     // Write second version
-    const result2 = latexToSvg('y');
+    const result2 = latexToSvg('y', { unit: 'pt' });
     await writeFile(outputPath, result2.svg, 'utf-8');
 
     const content = await readFile(outputPath, 'utf-8');
@@ -60,7 +60,7 @@ describe('latex_to_svg_file integration', () => {
 
 describe('SVG output validation', () => {
   it('produces valid SVG structure', () => {
-    const result = latexToSvg('\\frac{a}{b}');
+    const result = latexToSvg('\\frac{a}{b}', { unit: 'pt' });
 
     // Check for required SVG elements
     expect(result.svg).toMatch(/<svg[^>]*xmlns/);
@@ -68,14 +68,14 @@ describe('SVG output validation', () => {
   });
 
   it('includes viewBox in SVG', () => {
-    const result = latexToSvg('x + y');
+    const result = latexToSvg('x + y', { unit: 'pt' });
 
     // MathJax SVGs should have viewBox for proper scaling
     expect(result.svg).toMatch(/viewBox=/);
   });
 
   it('produces standalone SVG that can be embedded', () => {
-    const result = latexToSvg('\\sqrt{2}');
+    const result = latexToSvg('\\sqrt{2}', { unit: 'pt' });
 
     // Should be a complete SVG that can stand alone (no mjx-container wrapper)
     expect(result.svg).toMatch(/^<svg[^>]*>/);

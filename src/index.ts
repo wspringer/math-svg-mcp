@@ -17,6 +17,11 @@ server.tool(
   'Convert a LaTeX math expression to SVG and return the SVG content directly. Best for small expressions where you need the SVG inline.',
   {
     latex: z.string().describe('The LaTeX math expression to convert'),
+    unit: z
+      .enum(['pt', 'px', 'mm', 'ex'])
+      .describe(
+        'Output unit for width/height. Use pt for print/InDesign, px for web/browsers, mm for metric print, ex to keep relative units',
+      ),
     display: z
       .boolean()
       .optional()
@@ -24,11 +29,22 @@ server.tool(
     fontSize: z
       .number()
       .optional()
-      .describe('Font size in pixels for calculations. Default: 16'),
+      .describe('Font size (em size) for calculations. Default: 16'),
+    xHeightRatio: z
+      .number()
+      .optional()
+      .describe(
+        'Ratio of x-height to font size. Varies by font: Times 0.45, Helvetica 0.52, Computer Modern 0.43. Default: 0.5',
+      ),
   },
-  async ({ latex, display, fontSize }) => {
+  async ({ latex, unit, display, fontSize, xHeightRatio }) => {
     try {
-      const result = latexToSvg(latex, { display, fontSize });
+      const result = latexToSvg(latex, {
+        display,
+        fontSize,
+        xHeightRatio,
+        unit,
+      });
       return {
         content: [
           {
@@ -64,6 +80,11 @@ server.tool(
     outputPath: z
       .string()
       .describe('The file path where the SVG should be saved'),
+    unit: z
+      .enum(['pt', 'px', 'mm', 'ex'])
+      .describe(
+        'Output unit for width/height. Use pt for print/InDesign, px for web/browsers, mm for metric print, ex to keep relative units',
+      ),
     display: z
       .boolean()
       .optional()
@@ -71,11 +92,22 @@ server.tool(
     fontSize: z
       .number()
       .optional()
-      .describe('Font size in pixels for calculations. Default: 16'),
+      .describe('Font size (em size) for calculations. Default: 16'),
+    xHeightRatio: z
+      .number()
+      .optional()
+      .describe(
+        'Ratio of x-height to font size. Varies by font: Times 0.45, Helvetica 0.52, Computer Modern 0.43. Default: 0.5',
+      ),
   },
-  async ({ latex, outputPath, display, fontSize }) => {
+  async ({ latex, outputPath, unit, display, fontSize, xHeightRatio }) => {
     try {
-      const result = latexToSvg(latex, { display, fontSize });
+      const result = latexToSvg(latex, {
+        display,
+        fontSize,
+        xHeightRatio,
+        unit,
+      });
 
       // Resolve to absolute path
       const absolutePath = isAbsolute(outputPath)
