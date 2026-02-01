@@ -10,13 +10,13 @@ export type OutputUnit = 'pt' | 'px' | 'mm' | 'ex';
 export interface ConversionOptions {
   /** Display mode (block) vs inline mode. Default: true */
   display?: boolean;
-  /** Font size (em size) for calculations. Default: 16 */
+  /** Font size (em size) in the same unit as 'unit'. Default: 16 */
   fontSize?: number;
   /** Ratio of x-height to em size. Varies by font (Times: 0.45, Helvetica: 0.52). Default: 0.5 */
   xHeightRatio?: number;
   /** Container width for line breaking calculations. Default: 800 */
   containerWidth?: number;
-  /** Output unit for width/height. Required. */
+  /** Output unit for width/height. fontSize should be specified in this unit. Required. */
   unit: OutputUnit;
 }
 
@@ -44,27 +44,20 @@ function getMathJax() {
 }
 
 /**
- * Convert ex value to target unit
+ * Convert ex value to target unit.
+ * exSize is already in the target unit (since fontSize is specified in that unit).
  */
 function convertExToUnit(
   exValue: number,
   exSize: number,
   unit: OutputUnit,
 ): string {
-  switch (unit) {
-    case 'ex':
-      // Keep original ex units
-      return `${exValue.toFixed(3)}ex`;
-    case 'pt':
-      // ex * exSize gives points (exSize = fontSize/2)
-      return `${(exValue * exSize).toFixed(3)}pt`;
-    case 'px':
-      // 1pt = 1.333px (at 96 DPI)
-      return `${(exValue * exSize * 1.333).toFixed(3)}px`;
-    case 'mm':
-      // 1pt = 0.3528mm
-      return `${(exValue * exSize * 0.3528).toFixed(3)}mm`;
+  if (unit === 'ex') {
+    // Keep original ex units
+    return `${exValue.toFixed(3)}ex`;
   }
+  // exSize is already in the target unit, so just multiply and append unit
+  return `${(exValue * exSize).toFixed(3)}${unit}`;
 }
 
 /**

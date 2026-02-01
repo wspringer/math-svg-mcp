@@ -29,7 +29,9 @@ server.tool(
     fontSize: z
       .number()
       .optional()
-      .describe('Font size (em size) for calculations. Default: 16'),
+      .describe(
+        'Font size (em size) in the same unit as the output. E.g., 11 for 11pt when unit=pt, or 16 for 16px when unit=px. Default: 16',
+      ),
     xHeightRatio: z
       .number()
       .optional()
@@ -92,7 +94,9 @@ server.tool(
     fontSize: z
       .number()
       .optional()
-      .describe('Font size (em size) for calculations. Default: 16'),
+      .describe(
+        'Font size (em size) in the same unit as the output. E.g., 11 for 11pt when unit=pt, or 16 for 16px when unit=px. Default: 16',
+      ),
     xHeightRatio: z
       .number()
       .optional()
