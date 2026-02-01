@@ -5,13 +5,19 @@ import { AllPackages } from 'mathjax-full/js/input/tex/AllPackages.js';
 import { mathjax } from 'mathjax-full/js/mathjax.js';
 import { SVG } from 'mathjax-full/js/output/svg.js';
 
+export type OutputUnit = 'pt' | 'px' | 'mm' | 'ex';
+
 export interface ConversionOptions {
   /** Display mode (block) vs inline mode. Default: true */
   display?: boolean;
-  /** Font size in pixels for em calculations. Default: 16 */
+  /** Font size (em size) in the same unit as 'unit'. Default: 16 */
   fontSize?: number;
+  /** Ratio of x-height to em size. Varies by font (Times: 0.45, Helvetica: 0.52). Default: 0.5 */
+  xHeightRatio?: number;
   /** Container width for line breaking calculations. Default: 800 */
   containerWidth?: number;
+  /** Output unit for width/height. fontSize should be specified in this unit. Required. */
+  unit: OutputUnit;
 }
 
 export interface ConversionResult {
@@ -38,25 +44,65 @@ function getMathJax() {
 }
 
 /**
+ * Convert ex value to target unit.
+ * exSize is already in the target unit (since fontSize is specified in that unit).
+ */
+function convertExToUnit(
+  exValue: number,
+  exSize: number,
+  unit: OutputUnit,
+): string {
+  if (unit === 'ex') {
+    // Keep original ex units
+    return `${exValue.toFixed(3)}ex`;
+  }
+  // exSize is already in the target unit, so just multiply and append unit
+  return `${(exValue * exSize).toFixed(3)}${unit}`;
+}
+
+/**
  * Convert LaTeX math expression to SVG
  */
 export function latexToSvg(
   latex: string,
-  options: ConversionOptions = {},
+  options: ConversionOptions,
 ): ConversionResult {
-  const { display = true, fontSize = 16, containerWidth = 800 } = options;
+  const {
+    display = true,
+    fontSize = 16,
+    xHeightRatio = 0.5,
+    containerWidth = 800,
+    unit,
+  } = options;
 
   const { document: doc, adaptor } = getMathJax();
+
+  // Calculate x-height from font size and ratio
+  const exSize = fontSize * xHeightRatio;
 
   const node = doc.convert(latex, {
     display,
     em: fontSize,
-    ex: fontSize / 2,
+    ex: exSize,
     containerWidth,
   });
 
   // Use innerHTML to get just the SVG element, not the mjx-container wrapper
-  const svgString = adaptor.innerHTML(node);
+  let svgString = adaptor.innerHTML(node);
+
+  // MathJax outputs width/height in ex units
+  // Convert to the requested output unit
+
+  svgString = svgString.replace(
+    /width="([0-9.]+)ex"/,
+    (_, value) =>
+      `width="${convertExToUnit(Number.parseFloat(value), exSize, unit)}"`,
+  );
+  svgString = svgString.replace(
+    /height="([0-9.]+)ex"/,
+    (_, value) =>
+      `height="${convertExToUnit(Number.parseFloat(value), exSize, unit)}"`,
+  );
 
   // Extract dimensions from the SVG
   const widthMatch = svgString.match(/width="([^"]+)"/);
