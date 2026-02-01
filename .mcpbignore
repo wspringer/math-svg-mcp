@@ -1,0 +1,26 @@
+# Source files (we only need dist/)
+src/
+tsconfig.json
+vitest.config.ts
+biome.json
+
+# Development files
+.git/
+.github/
+.claude/
+.changeset/
+.husky/
+
+# Documentation
+README.md
+CLAUDE.md
+CHANGELOG.md
+knope.toml
+
+# Test files
+**/*.test.ts
+**/*.test.js
+
+# Lock files and logs
+package-lock.json
+*.log

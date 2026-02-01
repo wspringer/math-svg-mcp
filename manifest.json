@@ -1,0 +1,26 @@
+{
+  "manifest_version": "0.3",
+  "name": "math-svg-mcp",
+  "display_name": "Math SVG",
+  "version": "1.0.0",
+  "description": "Convert LaTeX math expressions to SVG using MathJax",
+  "author": {
+    "name": "Wilfred Springer"
+  },
+  "repository": "https://github.com/wspringer/math-svg-mcp",
+  "license": "MIT",
+  "server": {
+    "type": "node",
+    "entry_point": "dist/index.js"
+  },
+  "tools": [
+    {
+      "name": "latex_to_svg",
+      "description": "Convert a LaTeX math expression to SVG and return the SVG content directly"
+    },
+    {
+      "name": "latex_to_svg_file",
+      "description": "Convert a LaTeX math expression to SVG and save it to a file"
+    }
+  ]
+}
