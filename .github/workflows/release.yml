@@ -83,13 +83,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Sync packages version in server.json
-        run: |
-          # knope updates top-level version; sync it to packages[0].version
-          VERSION=$(jq -r '.version' server.json)
-          jq --arg v "$VERSION" '.packages[0].version = $v' server.json > server.tmp.json
-          mv server.tmp.json server.json
-
       - name: Install mcp-publisher
         run: |
           curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_Linux_x86_64.tar.gz" | tar xz
