@@ -1,14 +1,18 @@
 #!/usr/bin/env node
 import { mkdir, writeFile } from 'node:fs/promises';
+import { createRequire } from 'node:module';
 import { dirname, isAbsolute, resolve } from 'node:path';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
 import { latexToSvg } from './mathjax.js';
 
+const require = createRequire(import.meta.url);
+const { version } = require('../package.json');
+
 const server = new McpServer({
   name: 'math-svg-mcp',
-  version: '1.0.0',
+  version,
 });
 
 // Tool: Convert LaTeX to SVG and return it directly

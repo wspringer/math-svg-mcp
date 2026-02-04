@@ -16,16 +16,21 @@
     "lint": "biome lint .",
     "format": "biome format --write .",
     "check": "biome check --write .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "prepublishOnly": "npm run test && npm run build"
   },
-  "keywords": [
-    "mcp",
-    "latex",
-    "mathjax",
-    "svg",
-    "math"
-  ],
+  "keywords": ["mcp", "latex", "mathjax", "svg", "math"],
   "license": "MIT",
+  "author": "Wilfred Springer",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wspringer/math-svg-mcp.git"
+  },
+  "homepage": "https://github.com/wspringer/math-svg-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/wspringer/math-svg-mcp/issues"
+  },
+  "files": ["dist"],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
     "mathjax-full": "^3.2.2",
@@ -41,11 +46,12 @@
     "vitest": "^3.0.0"
   },
   "lint-staged": {
-    "*.{js,ts,json}": [
-      "biome check --write"
-    ]
+    "*.{js,ts,json}": ["biome check --write"]
   },
   "engines": {
     "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
