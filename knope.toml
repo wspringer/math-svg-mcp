@@ -1,5 +1,5 @@
 [packages.math-svg-mcp]
-versioned_files = ["package.json"]
+versioned_files = ["package.json", "server.json"]
 changelog = "CHANGELOG.md"
 
 [[workflows]]
