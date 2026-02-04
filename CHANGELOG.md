@@ -1,3 +1,18 @@
+## 1.1.0 (2026-02-01)
+
+### Features
+
+#### Add depth output for baseline alignment
+
+Returns the distance below the text baseline, extracted from MathJax's vertical-align style. This enables proper vertical alignment when placing formulas inline with text.
+
+#### Add required unit parameter and optional xHeightRatio for precise SVG sizing
+
+- Add required `unit` parameter (`pt`, `px`, `mm`, `ex`) to control output dimensions
+- Add optional `xHeightRatio` parameter for font-specific x-height tuning
+- fontSize is now specified in the same unit as the output for intuitive sizing
+- Improves compatibility with print applications like InDesign
+
 ## 1.0.4 (2026-02-01)
 
 ### Fixes
