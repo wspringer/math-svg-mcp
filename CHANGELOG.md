@@ -1,3 +1,9 @@
+## 1.1.1 (2026-02-04)
+
+### Fixes
+
+- Improve README for MCP server users with configuration examples and Sidekick banner
+
 ## 1.1.0 (2026-02-01)
 
 ### Features
