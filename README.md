@@ -16,6 +16,8 @@ and use the tool to render it:
 
 ![Laplace transform](example.svg)
 
+[![Works great with Sidekick for InDesign](sidekick-banner.svg)](https://sidekick.eastpole.nl?utm_source=github&utm_medium=readme&utm_campaign=math-svg-mcp)
+
 ## Quick Install (Claude Desktop)
 
 Download and open the `.mcpb` file from the [latest release](https://github.com/wspringer/math-svg-mcp/releases/latest) to automatically configure Claude Desktop.
