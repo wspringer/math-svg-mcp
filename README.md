@@ -1,84 +1,132 @@
 # math-svg-mcp
 
-An MCP (Model Context Protocol) server that converts LaTeX math expressions to SVG using MathJax.
+An MCP server that converts LaTeX math expressions to SVG.
 
-## Installation
+Once configured, Claude (or your favorite AI assistant) is able to convert LaTeX math expressions to SVG. So you could, for instance, ask:
 
-```bash
-npm install
-npm run build
+> Give me the Laplace transform formula as SVG
+
+The assistant will generate the LaTeX:
+
+```latex
+\mathcal{L}\{f(t)\} = \int_0^\infty f(t) e^{-st} \, dt = F(s)
 ```
 
-## Usage
+and use the tool to render it:
 
-### As an MCP Server
+![Laplace transform](example.svg)
 
-Add to your MCP client configuration (e.g., Claude Desktop):
+## Quick Install (Claude Desktop)
+
+Download and open the `.mcpb` file from the [latest release](https://github.com/wspringer/math-svg-mcp/releases/latest) to automatically configure Claude Desktop.
+
+Or use this direct link: [math-svg-mcp.mcpb](https://github.com/wspringer/math-svg-mcp/releases/latest/download/math-svg-mcp.mcpb)
+
+## Manual Configuration
+
+### Claude Desktop
+
+Add to your Claude Desktop configuration file:
+
+**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+**Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
 
 ```json
 {
   "mcpServers": {
     "math-svg": {
-      "command": "node",
-      "args": ["/path/to/math-svg-mcp/dist/index.js"]
+      "command": "npx",
+      "args": ["-y", "math-svg-mcp"]
     }
   }
 }
 ```
 
-### Available Tools
+### Claude Code
 
-#### `latex_to_svg`
+Add to your Claude Code settings (`.claude/settings.json` or global settings):
 
-Converts a LaTeX math expression to SVG and returns the SVG content directly. Best for small expressions.
-
-**Parameters:**
-- `latex` (required): The LaTeX math expression to convert
-- `display` (optional): Display mode (block) vs inline mode. Default: `true`
-- `fontSize` (optional): Font size in pixels. Default: `16`
-
-**Example:**
 ```json
 {
-  "latex": "E = mc^2"
+  "mcpServers": {
+    "math-svg": {
+      "command": "npx",
+      "args": ["-y", "math-svg-mcp"]
+    }
+  }
 }
 ```
 
-#### `latex_to_svg_file`
+Or run directly:
 
-Converts a LaTeX math expression to SVG and saves it to a file. Best for larger expressions or when you need to reference the SVG by path.
+```bash
+claude mcp add math-svg -- npx -y math-svg-mcp
+```
 
-**Parameters:**
-- `latex` (required): The LaTeX math expression to convert
-- `outputPath` (required): The file path where the SVG should be saved
-- `display` (optional): Display mode (block) vs inline mode. Default: `true`
-- `fontSize` (optional): Font size in pixels. Default: `16`
+### Other MCP Clients
 
-**Example:**
+Any MCP-compatible client can use this server with the same configuration pattern:
+
 ```json
 {
-  "latex": "\\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}",
-  "outputPath": "/tmp/gaussian.svg"
+  "command": "npx",
+  "args": ["-y", "math-svg-mcp"]
 }
 ```
+
+### Global Installation (Optional)
+
+For faster startup, install globally:
+
+```bash
+npm install -g math-svg-mcp
+```
+
+Then configure your client to use:
+
+```json
+{
+  "command": "math-svg-mcp"
+}
+```
+
+## Tools
+
+### `latex_to_svg`
+
+Converts a LaTeX expression to SVG and returns the content directly.
+
+| Parameter | Required | Default | Description |
+|-----------|----------|---------|-------------|
+| `latex` | Yes | — | LaTeX math expression |
+| `display` | No | `true` | Display mode (block) vs inline |
+| `fontSize` | No | `16` | Font size in pixels |
+
+**Example:** `E = mc^2`
+
+### `latex_to_svg_file`
+
+Converts a LaTeX expression to SVG and saves to a file.
+
+| Parameter | Required | Default | Description |
+|-----------|----------|---------|-------------|
+| `latex` | Yes | — | LaTeX math expression |
+| `outputPath` | Yes | — | File path for the SVG |
+| `display` | No | `true` | Display mode (block) vs inline |
+| `fontSize` | No | `16` | Font size in pixels |
+
+**Example:** `\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}` → `/tmp/gaussian.svg`
+
+## Requirements
+
+- Node.js 18 or later
 
 ## Development
 
 ```bash
-# Run tests
-npm test
-
-# Run tests in watch mode
-npm run test:watch
-
-# Lint and format
-npm run check
-
-# Build
+npm install
 npm run build
-
-# Run in development mode
-npm run dev
+npm test
 ```
 
 ## License
