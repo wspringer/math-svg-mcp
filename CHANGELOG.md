@@ -1,3 +1,9 @@
+## 1.1.2 (2026-02-04)
+
+### Fixes
+
+- Add mcpName field for official MCP registry support
+
 ## 1.1.1 (2026-02-04)
 
 ### Fixes
