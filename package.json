@@ -1,5 +1,6 @@
 {
   "name": "math-svg-mcp",
+  "mcpName": "io.github.wspringer/math-svg-mcp",
   "version": "1.1.1",
   "description": "MCP server for converting LaTeX math expressions to SVG using MathJax",
   "type": "module",
