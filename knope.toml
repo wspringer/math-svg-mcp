@@ -1,5 +1,8 @@
 [packages.math-svg-mcp]
-versioned_files = ["package.json", "server.json"]
+versioned_files = [
+  "package.json",
+  { path = "server.json", regex = '"version": "(?<version>[0-9.]+)"' },
+]
 changelog = "CHANGELOG.md"
 
 [[workflows]]
