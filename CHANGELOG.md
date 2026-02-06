@@ -1,3 +1,16 @@
+## 1.2.0 (2026-02-06)
+
+### Features
+
+#### Add font parameter to choose math font (modern default, 9 others available)
+
+- Upgrade to MathJax v4.0.0-beta.7
+- Default font changed from 'tex' to 'modern' (Latin Modern)
+- Fonts are downloaded automatically on first use via pacote
+- Cached in ~/.cache/math-svg-mcp/fonts/
+
+Available fonts: modern (bundled), stix2, newcm, fira, bonum, pagella, schola, termes, dejavu, asana
+
 ## 1.1.2 (2026-02-04)
 
 ### Fixes
