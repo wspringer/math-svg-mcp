@@ -1,21 +1,21 @@
-import { existsSync } from 'node:fs';
+import { existsSync, mkdirSync, symlinkSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { homedir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { liteAdaptor } from 'mathjax-full/js/adaptors/liteAdaptor.js';
 import { RegisterHTMLHandler } from 'mathjax-full/js/handlers/html.js';
 import { TeX } from 'mathjax-full/js/input/tex.js';
-import { AllPackages } from 'mathjax-full/js/input/tex/AllPackages.js';
 import { mathjax } from 'mathjax-full/js/mathjax.js';
 import { SVG } from 'mathjax-full/js/output/svg.js';
-import { TeXFont } from 'mathjax-full/js/output/svg/fonts/tex.js';
+import type { SvgFontData } from 'mathjax-full/js/output/svg/FontData.js';
 import pacote from 'pacote';
 
 export type OutputUnit = 'pt' | 'px' | 'mm' | 'ex';
 
 /** Supported math fonts */
 export type FontName =
-  | 'tex'
+  | 'modern'
   | 'stix2'
   | 'newcm'
   | 'fira'
@@ -23,13 +23,12 @@ export type FontName =
   | 'pagella'
   | 'schola'
   | 'termes'
-  | 'modern'
   | 'dejavu'
   | 'asana';
 
 /** All available font names */
 export const FONT_NAMES: FontName[] = [
-  'tex',
+  'modern',
   'stix2',
   'newcm',
   'fira',
@@ -37,7 +36,6 @@ export const FONT_NAMES: FontName[] = [
   'pagella',
   'schola',
   'termes',
-  'modern',
   'dejavu',
   'asana',
 ];
@@ -53,7 +51,7 @@ export interface ConversionOptions {
   containerWidth?: number;
   /** Output unit for width/height. fontSize should be specified in this unit. Required. */
   unit: OutputUnit;
-  /** Math font to use. Default: 'tex' */
+  /** Math font to use. Default: 'modern' */
   font?: FontName;
 }
 
@@ -70,7 +68,7 @@ const FONT_CACHE_DIR = join(homedir(), '.cache', 'math-svg-mcp', 'fonts');
 
 /** Map of font name to npm package name */
 const FONT_PACKAGES: Record<FontName, string> = {
-  tex: '', // bundled with mathjax-full
+  modern: '', // bundled with mathjax-full v4 via mathjax-modern-font
   stix2: '@mathjax/mathjax-stix2-font',
   newcm: '@mathjax/mathjax-newcm-font',
   fira: '@mathjax/mathjax-fira-font',
@@ -78,7 +76,6 @@ const FONT_PACKAGES: Record<FontName, string> = {
   pagella: '@mathjax/mathjax-pagella-font',
   schola: '@mathjax/mathjax-schola-font',
   termes: '@mathjax/mathjax-termes-font',
-  modern: '@mathjax/mathjax-modern-font',
   dejavu: '@mathjax/mathjax-dejavu-font',
   asana: '@mathjax/mathjax-asana-font',
 };
@@ -95,12 +92,38 @@ const mjCache = new Map<FontName, MathJaxInstance>();
 let sharedAdaptor: ReturnType<typeof liteAdaptor> | null = null;
 
 /**
+ * Ensure the mathjax-full symlink exists in a font package directory.
+ * Font packages depend on mathjax-full for imports.
+ */
+function ensureMathJaxSymlink(fontDir: string): void {
+  const nodeModulesDir = join(fontDir, 'node_modules');
+  const symlinkPath = join(nodeModulesDir, 'mathjax-full');
+
+  if (existsSync(symlinkPath)) {
+    return;
+  }
+
+  // Find the mathjax-full package location
+  const require = createRequire(import.meta.url);
+  const mathjaxFullPath = dirname(require.resolve('mathjax-full/package.json'));
+
+  // Create the node_modules directory structure
+  mkdirSync(nodeModulesDir, { recursive: true });
+
+  // Create symlink: mathjax-full -> our installed mathjax-full
+  symlinkSync(mathjaxFullPath, symlinkPath, 'dir');
+}
+
+/**
  * Load a font class, downloading it if necessary
  */
-async function loadFont(fontName: FontName): Promise<typeof TeXFont> {
-  if (fontName === 'tex') {
-    // TeXFont is bundled with mathjax-full
-    return TeXFont;
+async function loadFont(fontName: FontName): Promise<typeof SvgFontData> {
+  if (fontName === 'modern') {
+    // MathJaxModernFont is bundled with mathjax-full v4 via mathjax-modern-font dependency
+    const { MathJaxModernFont } = await import(
+      'mathjax-modern-font/mjs/svg.js'
+    );
+    return MathJaxModernFont;
   }
 
   const fontDir = join(FONT_CACHE_DIR, fontName);
@@ -111,19 +134,22 @@ async function loadFont(fontName: FontName): Promise<typeof TeXFont> {
     await pacote.extract(pkgName, fontDir);
   }
 
+  // Ensure mathjax-full symlink exists for font package imports
+  ensureMathJaxSymlink(fontDir);
+
   // Import from cache - use file URL for dynamic import
   const fontModulePath = join(fontDir, 'mjs', 'svg.js');
   const fontModuleUrl = pathToFileURL(fontModulePath).href;
   const fontModule = await import(fontModuleUrl);
 
-  // The font module exports a class like MathJaxStix2Font
-  return fontModule.default;
+  // Font packages export their main class (e.g., MathJaxStix2Font, MathJaxFiraFont)
+  return fontModule.default || Object.values(fontModule)[0];
 }
 
 /**
  * Get or create a MathJax instance for the given font
  */
-async function getMathJax(font: FontName = 'tex'): Promise<MathJaxInstance> {
+async function getMathJax(font: FontName = 'modern'): Promise<MathJaxInstance> {
   const cached = mjCache.get(font);
   if (cached) {
     return cached;
@@ -137,8 +163,22 @@ async function getMathJax(font: FontName = 'tex'): Promise<MathJaxInstance> {
 
   // Load font and create SVG output processor
   const FontClass = await loadFont(font);
-  const tex = new TeX({ packages: AllPackages });
-  const svg = new SVG({ fontCache: 'local', font: new FontClass() });
+
+  // v4: TeX packages are passed as array of strings
+  const tex = new TeX({
+    packages: [
+      'base',
+      'ams',
+      'newcommand',
+      'noundefined',
+      'autoload',
+      'require',
+      'configmacros',
+    ],
+  });
+
+  // v4: Font is passed via fontData option
+  const svg = new SVG({ fontCache: 'local', fontData: FontClass });
 
   const document = mathjax.document('', { InputJax: tex, OutputJax: svg });
 
@@ -178,7 +218,7 @@ export async function latexToSvg(
     xHeightRatio = 0.5,
     containerWidth = 800,
     unit,
-    font = 'tex',
+    font = 'modern',
   } = options;
 
   const { document: doc, adaptor } = await getMathJax(font);

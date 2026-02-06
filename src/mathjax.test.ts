@@ -159,14 +159,14 @@ describe('latexToSvg', () => {
     expect(depthValue).toBeLessThan(1); // Should be essentially 0
   });
 
-  it('uses tex font by default', async () => {
+  it('uses modern font by default', async () => {
     const result = await latexToSvg('x^2', { unit: 'pt' });
 
     expect(result.svg).toContain('<svg');
   });
 
-  it('accepts explicit tex font parameter', async () => {
-    const result = await latexToSvg('x^2', { unit: 'pt', font: 'tex' });
+  it('accepts explicit modern font parameter', async () => {
+    const result = await latexToSvg('x^2', { unit: 'pt', font: 'modern' });
 
     expect(result.svg).toContain('<svg');
   });

@@ -2,8 +2,11 @@
 math-svg-mcp: minor
 ---
 
-Add font parameter to choose math font (tex default, 10 others available)
+Add font parameter to choose math font (modern default, 9 others available)
 
-Fonts are automatically downloaded on first use via pacote (npm's package fetcher) and cached in ~/.cache/math-svg-mcp/fonts/. This works with npx and bun - no project context needed.
+- Upgrade to MathJax v4.0.0-beta.7
+- Default font changed from 'tex' to 'modern' (Latin Modern)
+- Fonts are downloaded automatically on first use via pacote
+- Cached in ~/.cache/math-svg-mcp/fonts/
 
-Available fonts: tex (bundled), stix2, newcm, fira, bonum, pagella, schola, termes, modern, dejavu, asana
+Available fonts: modern (bundled), stix2, newcm, fira, bonum, pagella, schola, termes, dejavu, asana

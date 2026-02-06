@@ -42,7 +42,7 @@ server.tool(
       .enum(FONT_NAMES as [string, ...string[]])
       .optional()
       .describe(
-        'Math font to use. Default: tex. Other fonts (stix2, fira, etc.) are downloaded automatically on first use.',
+        'Math font to use. Default: modern. Other fonts (stix2, fira, etc.) are downloaded automatically on first use.',
       ),
   },
   async ({ latex, unit, display, fontSize, xHeightRatio, font }) => {
@@ -115,7 +115,7 @@ server.tool(
       .enum(FONT_NAMES as [string, ...string[]])
       .optional()
       .describe(
-        'Math font to use. Default: tex. Other fonts (stix2, fira, etc.) are downloaded automatically on first use.',
+        'Math font to use. Default: modern. Other fonts (stix2, fira, etc.) are downloaded automatically on first use.',
       ),
   },
   async ({

@@ -105,7 +105,7 @@ Converts a LaTeX expression to SVG and returns the content directly.
 | `display` | No | `true` | Display mode (block) vs inline |
 | `fontSize` | No | `16` | Font size in the specified unit |
 | `xHeightRatio` | No | `0.5` | Ratio of x-height to font size |
-| `font` | No | `tex` | Math font (see [Available Fonts](#available-fonts)) |
+| `font` | No | `modern` | Math font (see [Available Fonts](#available-fonts)) |
 
 **Example:** `E = mc^2`
 
@@ -121,17 +121,17 @@ Converts a LaTeX expression to SVG and saves to a file.
 | `display` | No | `true` | Display mode (block) vs inline |
 | `fontSize` | No | `16` | Font size in the specified unit |
 | `xHeightRatio` | No | `0.5` | Ratio of x-height to font size |
-| `font` | No | `tex` | Math font (see [Available Fonts](#available-fonts)) |
+| `font` | No | `modern` | Math font (see [Available Fonts](#available-fonts)) |
 
 **Example:** `\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}` → `/tmp/gaussian.svg`
 
 ## Available Fonts
 
-The `font` parameter lets you choose from 11 math fonts. The default `tex` font is bundled; others are automatically downloaded on first use and cached in `~/.cache/math-svg-mcp/fonts/`.
+The `font` parameter lets you choose from 10 math fonts. The default `modern` font (Latin Modern) is bundled; others are automatically downloaded on first use and cached in `~/.cache/math-svg-mcp/fonts/`.
 
 | Font | Description |
 |------|-------------|
-| `tex` | Classic TeX/Computer Modern (default, bundled) |
+| `modern` | Latin Modern (default, bundled) |
 | `stix2` | STIX Two Math |
 | `newcm` | New Computer Modern |
 | `fira` | Fira Math |
@@ -139,7 +139,6 @@ The `font` parameter lets you choose from 11 math fonts. The default `tex` font 
 | `pagella` | TeX Gyre Pagella |
 | `schola` | TeX Gyre Schola |
 | `termes` | TeX Gyre Termes |
-| `modern` | Latin Modern |
 | `dejavu` | DejaVu |
 | `asana` | Asana Math |
 
