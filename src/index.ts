@@ -4,7 +4,7 @@ import { dirname, isAbsolute, resolve } from 'node:path';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
-import { latexToSvg } from './mathjax.js';
+import { FONT_NAMES, type FontName, latexToSvg } from './mathjax.js';
 
 const server = new McpServer({
   name: 'math-svg-mcp',
@@ -38,14 +38,21 @@ server.tool(
       .describe(
         'Ratio of x-height to font size. Varies by font: Times 0.45, Helvetica 0.52, Computer Modern 0.43. Default: 0.5',
       ),
+    font: z
+      .enum(FONT_NAMES as [string, ...string[]])
+      .optional()
+      .describe(
+        'Math font to use. Default: modern. Other fonts (stix2, fira, etc.) are downloaded automatically on first use.',
+      ),
   },
-  async ({ latex, unit, display, fontSize, xHeightRatio }) => {
+  async ({ latex, unit, display, fontSize, xHeightRatio, font }) => {
     try {
-      const result = latexToSvg(latex, {
+      const result = await latexToSvg(latex, {
         display,
         fontSize,
         xHeightRatio,
         unit,
+        font: font as FontName | undefined,
       });
       return {
         content: [
@@ -104,14 +111,29 @@ server.tool(
       .describe(
         'Ratio of x-height to font size. Varies by font: Times 0.45, Helvetica 0.52, Computer Modern 0.43. Default: 0.5',
       ),
+    font: z
+      .enum(FONT_NAMES as [string, ...string[]])
+      .optional()
+      .describe(
+        'Math font to use. Default: modern. Other fonts (stix2, fira, etc.) are downloaded automatically on first use.',
+      ),
   },
-  async ({ latex, outputPath, unit, display, fontSize, xHeightRatio }) => {
+  async ({
+    latex,
+    outputPath,
+    unit,
+    display,
+    fontSize,
+    xHeightRatio,
+    font,
+  }) => {
     try {
-      const result = latexToSvg(latex, {
+      const result = await latexToSvg(latex, {
         display,
         fontSize,
         xHeightRatio,
         unit,
+        font: font as FontName | undefined,
       });
 
       // Resolve to absolute path

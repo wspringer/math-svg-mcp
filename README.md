@@ -101,8 +101,11 @@ Converts a LaTeX expression to SVG and returns the content directly.
 | Parameter | Required | Default | Description |
 |-----------|----------|---------|-------------|
 | `latex` | Yes | — | LaTeX math expression |
+| `unit` | Yes | — | Output unit: `pt`, `px`, `mm`, or `ex` |
 | `display` | No | `true` | Display mode (block) vs inline |
-| `fontSize` | No | `16` | Font size in pixels |
+| `fontSize` | No | `16` | Font size in the specified unit |
+| `xHeightRatio` | No | `0.5` | Ratio of x-height to font size |
+| `font` | No | `modern` | Math font (see [Available Fonts](#available-fonts)) |
 
 **Example:** `E = mc^2`
 
@@ -114,10 +117,30 @@ Converts a LaTeX expression to SVG and saves to a file.
 |-----------|----------|---------|-------------|
 | `latex` | Yes | — | LaTeX math expression |
 | `outputPath` | Yes | — | File path for the SVG |
+| `unit` | Yes | — | Output unit: `pt`, `px`, `mm`, or `ex` |
 | `display` | No | `true` | Display mode (block) vs inline |
-| `fontSize` | No | `16` | Font size in pixels |
+| `fontSize` | No | `16` | Font size in the specified unit |
+| `xHeightRatio` | No | `0.5` | Ratio of x-height to font size |
+| `font` | No | `modern` | Math font (see [Available Fonts](#available-fonts)) |
 
 **Example:** `\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}` → `/tmp/gaussian.svg`
+
+## Available Fonts
+
+The `font` parameter lets you choose from 10 math fonts. The default `modern` font (Latin Modern) is bundled; others are automatically downloaded on first use and cached in `~/.cache/math-svg-mcp/fonts/`.
+
+| Font | Description |
+|------|-------------|
+| `modern` | Latin Modern (default, bundled) |
+| `stix2` | STIX Two Math |
+| `newcm` | New Computer Modern |
+| `fira` | Fira Math |
+| `bonum` | TeX Gyre Bonum |
+| `pagella` | TeX Gyre Pagella |
+| `schola` | TeX Gyre Schola |
+| `termes` | TeX Gyre Termes |
+| `dejavu` | DejaVu |
+| `asana` | Asana Math |
 
 ## Requirements
 
